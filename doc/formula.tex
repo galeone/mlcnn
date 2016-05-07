@@ -1,0 +1,41 @@
+\documentclass[a4paper,10pt]{article}
+%\documentclass[a4paper,10pt]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+
+\title{}
+\author{}
+\date{}
+
+\pdfinfo{%
+  /Title    ()
+  /Author   ()
+  /Creator  ()
+  /Producer ()
+  /Subject  ()
+  /Keywords ()
+}
+
+\begin{document}
+\maketitle
+\clearpage
+Number of neurons after a convolution:
+
+$$ W_2 \times H_2 = \frac{W_1 - F + 2P}{S} + 1 \times  \frac{H_1 - F + 2P}{S} + 1 $$
+
+Where:
+\begin{itemize}
+        \item $K$ = $D$ = Depth = spatial extent
+        \item $W$: width
+        \item $H$: height
+        \item $F$: receptive filed ($k1 \times k1$): first 2 input dim. The 3rd dim is D.
+        \item $S$: stride in the desired direction
+        \item $P$: padding
+\end{itemize}
+
+TODO:
+
+for the current conv net architecture, generalize this forumula (or use it)
+to predict the spatial extent of the vector map
+
+\end{document}
