@@ -68,10 +68,12 @@ def kernels(shape, name):
     w, summaries = weight(shape, name)
 
     with tf.name_scope("summaries"):
-        if shape[2] in (1, 2, 3):
-            summaries.append(kernels_on_grid_summary(w, name))
-            #summaries.append(tf.image_summary(name,w, max_images=shape[3]/shape[2]))
-
+        if shape[2] in (1,3,4):
+            max_images = int(shape[3] / shape[2])
+            summaries.append(tf.image_summary(name,
+                                              tf.reshape(w, [max_images, shape[
+                                                  0], shape[1], shape[2]]),
+                                              max_images=max_images))
     return w, summaries
 
 
