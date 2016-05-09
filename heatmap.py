@@ -21,10 +21,8 @@ TRAINED_MODEL_FILENAME = "model.pb"
 def test(path):
     """test the model"""
 
-    # get the dataset
+    # get the grayscale image
     image = imread(path, flatten=True)
-    #image = imread("heatmap/face00001.pgm", flatten=True)
-    #image = imread("heatmap/cmu_0000.pgm", flatten=True)
 
     # import the model into the current graph
     with tf.Graph().as_default() as graph:
@@ -84,6 +82,7 @@ def test(path):
             print("heatmap shape: {} from image with shape {}".format(
                 heatmap.shape, image.shape))
 
+            """
             # convert one hot vector representation to a numeric value
             dummy_dataset = dataset.DataSet(
                 np.array([0, 0]), np.array([1, -1]))
@@ -95,6 +94,8 @@ def test(path):
 
             print(real_heatmap)
             print(len(real_heatmap))
+            """
+            print(heatmap)
             end = datetime.now()
             print(end - start)
         return 0
