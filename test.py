@@ -40,9 +40,14 @@ def test():
         # extract tensor from graph
         unscaled_logits = graph.get_tensor_by_name("FC2/unscaled_logits:0")
 
+        out_shape = tf.shape(unscaled_logits)
+
         # define some test operations
         labels = tf.placeholder(tf.float32, [None, 2], "labels")
+
+        unscaled_logits = tf.reshape(unscaled_logits, [-1, 2])
         softmax = tf.nn.softmax(unscaled_logits, name="softmax")
+
         correct_predictions = tf.equal(
             tf.arg_max(softmax, 1), tf.arg_max(labels, 1))
         accuracy = tf.reduce_mean(

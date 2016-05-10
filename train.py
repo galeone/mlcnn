@@ -20,12 +20,14 @@ SUMMARY_DIR = "summary"
 TRAINED_MODEL_FILENAME = "model.pb"
 
 
-def loss(unscaled_logits, labels):
+def loss(unscaled_logits_reshaped, labels):
     """loss defines the loss functions used in the model
     labels is the tensor (one-hot-vector) that contains the real classes
+    unscaled_logits_respahed is the last layer output, reshaped to (?, 2)
     """
     cross_entropy = tf.nn.softmax_cross_entropy_with_logits(
-        unscaled_logits, labels, name='cross_entropy')
+        unscaled_logits_reshaped,
+        labels, name='cross_entropy')
     loss_fn = tf.reduce_mean(cross_entropy, name="mean_cross_entropy")
     return loss_fn
 
@@ -69,24 +71,24 @@ def train():
             ##### build the model
 
             # infer the probability of images to appartain to certain classes
-            unscaled_logits, model_summaries = model.get(
-                images, keep_prob, mitcbcl.MITCBCL.width,
-                mitcbcl.MITCBCL.height)
+            unscaled_logits, model_summaries = model.get(images, keep_prob)
+            unscaled_logits_reshaped = tf.reshape(unscaled_logits, [-1, 2])
 
             ##### train operations and parameters
             batch_size = 50
-            min_accuracy = 0.99
+            min_accuracy = 0.9
             max_iterations = 10**100 + 1
             display_step = 100
 
             learning_rate = 1e-5
-            loss_op = loss(unscaled_logits, labels)
+            loss_op = loss(unscaled_logits_reshaped, labels)
             global_step = tf.Variable(0, trainable=False)
             train_op = train_step(learning_rate, loss_op, global_step)
 
             #### metrics to evaluate the model
             # predictions are the probability values, that softmax returns
-            predictions = tf.nn.softmax(unscaled_logits, name="softmax")
+            predictions = tf.nn.softmax(unscaled_logits_reshaped,
+                                        name="softmax")
             correct_predictions = tf.equal(
                 tf.arg_max(predictions, 1), tf.arg_max(labels, 1))
             accuracy = tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
